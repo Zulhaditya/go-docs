@@ -1,1 +1,1 @@
-# Learn Golang from basic topic to advance
+# Belajar go dari topik dasar sampai advance
