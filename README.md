@@ -1,1 +1,1 @@
-# Belajar go dari topik dasar sampai advance
+# Learn Go!
