@@ -18,6 +18,33 @@ menjalankan unit test:
 - go test -v ./... => running unit test di semua package (root folder)
 */
 
+func TestMain(m *testing.M) {
+	// before
+	fmt.Println("BEFORE UNIT TEST")
+
+	m.Run()
+
+	// after
+	fmt.Println("AFTER UNIT TEST")
+}
+
+// subtest
+// cara running:
+// go test -v -run=TestSubTest
+// go test -v -run=TestSubTest/Syapiq
+func TestSubTest(t *testing.T) {
+	t.Run("Syapiq", func(t *testing.T) {
+		result := HelloWorld("Syapiq")
+		require.Equal(t, "Hello Syapiq", result, "Result must be 'Hello Syapiq'")
+	})
+
+	t.Run("Iqbal", func(t *testing.T) {
+		result := HelloWorld("Iqbal")
+		require.Equal(t, "Hello Iqbal", result, "Result must be 'Hello Iqbal'")
+	})
+
+}
+
 func TestHelloWorld(t *testing.T) {
 	result := HelloWorld("Ackxle")
 	if result != "Hello Ackxle" {
