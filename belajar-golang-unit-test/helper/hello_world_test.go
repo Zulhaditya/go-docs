@@ -18,6 +18,33 @@ menjalankan unit test:
 - go test -v ./... => running unit test di semua package (root folder)
 */
 
+// go test -v -run=TestTableHelloWorld
+func TestTableHelloWorld(t *testing.T) {
+	tests := []struct {
+		name     string
+		request  string
+		expected string
+	}{
+		{
+			name:     "Inayah",
+			request:  "Inayah",
+			expected: "Hello Inayah",
+		},
+		{
+			name:     "Wulandari",
+			request:  "Wulandari",
+			expected: "Hello Wulandari",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := HelloWorld(test.request)
+			require.Equal(t, test.expected, result)
+		})
+	}
+}
+
 func TestMain(m *testing.M) {
 	// before
 	fmt.Println("BEFORE UNIT TEST")
