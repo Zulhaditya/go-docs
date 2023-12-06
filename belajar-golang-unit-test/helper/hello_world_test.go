@@ -111,5 +111,72 @@ func TestSkip(t *testing.T) {
 
 	result := HelloWorld("Ackxle")
 	require.Equal(t, "Hello Ackxle", result, "Result must be 'Hello Ackxle'")
+}
 
+// benchmark
+/*
+menjalankan benchmark:
+- go test -v -bench=. => menjalankan unit test dan benchmark
+- go test -v -run=NotMatchUnitTest -bench=. => menjalankan benchmark saja
+- go test -v -run=NotMatchUnitTest -bench=HelloWorldInayah => menjalankan benchmark tertentu
+*/
+func BenchmarkHelloWorld(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		HelloWorld("Ackxle")
+	}
+}
+
+func BenchmarkHelloWorldInayah(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		HelloWorld("Inayah Fitri Wulandari")
+	}
+}
+
+// sub benchmark
+func BenchmarkSub(b *testing.B) {
+	b.Run("Syapiq", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			HelloWorld("Syapiq Alfarazi")
+		}
+	})
+	b.Run("Iqbal", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			HelloWorld("Iqbal Ramadhan")
+		}
+	})
+}
+
+// table benchmark
+// cara menjalankan:
+// go test -v -run=TestTidakAda -bench=BenchmarkTable
+func BenchmarkTable(b *testing.B) {
+	benchmarks := []struct {
+		name    string
+		request string
+	}{
+		{
+			name:    "Inayah",
+			request: "Inayah",
+		},
+		{
+			name:    "Fitri",
+			request: "Fitri",
+		},
+		{
+			name:    "Wulandari",
+			request: "Wulandari",
+		},
+		{
+			name:    "Muhammad Zulhaditya Hapiz",
+			request: "Muhammad Zulhaditya Hapiz",
+		},
+	}
+
+	for _, benchmark := range benchmarks {
+		b.Run(benchmark.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				HelloWorld(benchmark.request)
+			}
+		})
+	}
 }
