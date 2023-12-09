@@ -17,8 +17,8 @@ func TestOnce(t *testing.T) {
 	group := sync.WaitGroup{}
 
 	for i := 0; i < 100; i++ {
+		group.Add(1)
 		go func() {
-			group.Add(1)
 			once.Do(OnlyOnce)
 			group.Done()
 		}()
