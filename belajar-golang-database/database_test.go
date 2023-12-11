@@ -17,7 +17,7 @@ func TestOpenConnection(t *testing.T) {
 		panic(err)
 	}
 
-	db.Close() // close database jika tidak digunakan lagi
+	defer db.Close() // close database jika tidak digunakan lagi
 
 	// gunakan database
 
