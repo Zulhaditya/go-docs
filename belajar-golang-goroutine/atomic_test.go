@@ -8,6 +8,7 @@ import (
 )
 
 func TestAtomic(t *testing.T) {
+
 	var x int64 = 0
 	group := sync.WaitGroup{}
 
