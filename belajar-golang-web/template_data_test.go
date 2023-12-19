@@ -29,9 +29,10 @@ func TestTemplateDataMap(t *testing.T) {
 }
 
 type Page struct {
-	Title string
-	Name  string
-	Angka int
+	Title      string
+	Name       string
+	Angka      int
+	FinalValue int
 }
 
 func TemplateDataStruct(writer http.ResponseWriter, request *http.Request) {
