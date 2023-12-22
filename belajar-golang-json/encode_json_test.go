@@ -7,6 +7,7 @@ import (
 )
 
 func logJSON(data interface{}) {
+	// lakukan konversi menggunakan function marshal
 	bytes, err := json.Marshal(data)
 	if err != nil {
 		panic(err)
@@ -16,8 +17,8 @@ func logJSON(data interface{}) {
 }
 
 func TestMarshal(t *testing.T) {
-	logJSON("Ackxle")
-	logJSON(7)
-	logJSON(true)
-	logJSON([]string{"Inayah", "Wulandari"})
+	logJSON("Ackxle")                        // string
+	logJSON(7)                               // number
+	logJSON(true)                            // boolean
+	logJSON([]string{"Inayah", "Wulandari"}) // slice
 }
