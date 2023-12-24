@@ -1,0 +1,12 @@
+{
+  "FirstName": "Inayah",
+  "MiddleName": "Fitri",
+  "LastName": "Wulandari",
+  "Age": 23,
+  "Married": true,
+  "Hobbies": [
+    "Gaming",
+    "Reading",
+    "Coding"
+  ]
+}
