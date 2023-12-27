@@ -1,0 +1,29 @@
+### Get all categories
+GET http://localhost:8080/api/categories
+Accept: application/json
+
+### Create new category
+POST http://localhost:8080/api/categories
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Laptop"
+}
+
+### Get category by id
+GET http://localhost:8080/api/categories/2
+Accept: application/json
+
+### Update category by id
+PUT http://localhost:8080/api/categories/1
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Computer"
+}
+
+### Delete category by id
+DELETE http://localhost:8080/api/categories/2
+Accept: application/json
