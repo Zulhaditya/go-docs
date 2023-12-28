@@ -1,29 +1,34 @@
 ### Get all categories
 GET http://localhost:8080/api/categories
+X-API-Key: SECRET
 Accept: application/json
 
 ### Create new category
 POST http://localhost:8080/api/categories
+X-API-Key: SECRET
 Accept: application/json
 Content-Type: application/json
 
 {
-    "name": ""
+    "name": "Food"
 }
 
 ### Get category by id
-GET http://localhost:8080/api/categories/2
+GET http://localhost:8080/api/categories/3
+X-API-Key: SECRET
 Accept: application/json
 
 ### Update category by id
-PUT http://localhost:8080/api/categories/1
+PUT http://localhost:8080/api/categories/3
+X-API-Key: SECRET
 Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "Computer"
+    "name": "Sport"
 }
 
 ### Delete category by id
-DELETE http://localhost:8080/api/categories/2
+DELETE http://localhost:8080/api/categories/3
+X-API-Key: SECRET
 Accept: application/json
