@@ -7,7 +7,7 @@ import (
 	"github.com/google/wire"
 )
 
-func InitializedService() *SimpleServices {
+func InitializedService() *SimpleService {
 	wire.Build(
 		NewSimpleRepository, NewSimpleService,
 	)
