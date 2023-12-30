@@ -37,3 +37,16 @@ func InitializedHelloService() *HelloService {
 	wire.Build(HelloSet, NewHelloService)
 	return nil
 }
+
+var FooBarSet = wire.NewSet(
+	NewFoo,
+	NewBar,
+)
+
+func InitializedFoobar() *FooBar {
+	wire.Build(
+		FooBarSet,
+		wire.Struct(new(FooBar), "Foo", "Bar"),
+	)
+	return nil
+}
