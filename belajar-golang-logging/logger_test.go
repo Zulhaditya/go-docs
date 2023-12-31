@@ -65,3 +65,14 @@ func TestWithFields(t *testing.T) {
 		"name":     "inayah wulandari",
 	}).Infof("Hello inayah!")
 }
+
+func TestEntry(t *testing.T) {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{})
+
+	// buat new entry
+	entry := logrus.NewEntry(logger)
+
+	entry.WithField("username", "ackxle")
+	entry.Info("Hello ackxle!")
+}
