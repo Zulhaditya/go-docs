@@ -2,6 +2,7 @@ package belajar_golang_logging
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/sirupsen/logrus"
@@ -24,4 +25,25 @@ func TestLevel(t *testing.T) {
 	logger.Info("Logging in level Info")
 	logger.Warn("Logging in level Warn")
 	logger.Error("Logging in level Error")
+}
+
+func TestOutput(t *testing.T) {
+	logger := logrus.New()
+
+	// buat file application.log
+	file, _ := os.OpenFile("application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logger.SetOutput(file)
+
+	logger.Info("Hello world")
+	logger.Error("Error world")
+}
+
+func TestFormatter(t *testing.T) {
+	logger := logrus.New()
+
+	// setting formatter
+	logger.SetFormatter(&logrus.JSONFormatter{})
+	logger.Info("Logger with JSON Formatter")
+	logger.Warn("Warn")
+	logger.Error("Error")
 }
