@@ -47,3 +47,21 @@ func TestFormatter(t *testing.T) {
 	logger.Warn("Warn")
 	logger.Error("Error")
 }
+
+func TestField(t *testing.T) {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{})
+
+	logger.WithField("username", "ackxle").Info("Ackxle is login")
+	logger.WithField("years", 2024).Info("Happy new years!")
+}
+
+func TestWithFields(t *testing.T) {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{})
+
+	logger.WithFields(logrus.Fields{
+		"username": "inayah",
+		"name":     "inayah wulandari",
+	}).Infof("Hello inayah!")
+}
