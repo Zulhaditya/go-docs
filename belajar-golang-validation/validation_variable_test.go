@@ -28,3 +28,63 @@ func TestValidationTwoVariables(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 }
+
+func TestMultipleTag(t *testing.T) {
+	validate := validator.New()
+	var user string = "Ackxle123" // akan error karena bukan number
+
+	err := validate.Var(user, "required,numeric")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func TestTagParameter(t *testing.T) {
+	validate := validator.New()
+	user := "69"
+
+	err := validate.Var(user, "required,numeric,min=5,max=10") // min 5, max 10
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func TestStruct(t *testing.T) {
+	type LoginRequest struct {
+		Username string `validate:"required,email"`
+		Password string `validate:"required,min=5"`
+	}
+
+	validate := validator.New()
+	loginRequest := LoginRequest{
+		Username: "ackxle@gmail.com",
+		Password: "secret",
+	}
+
+	err := validate.Struct(loginRequest)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func TestStructValidationError(t *testing.T) {
+	type LoginRequest struct {
+		Username string `validate:"required,email"`
+		Password string `validate:"required,min=5"`
+	}
+
+	validate := validator.New()
+	loginRequest := LoginRequest{
+		Username: "ackxle",
+		Password: "123",
+	}
+
+	err := validate.Struct(loginRequest)
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+		for _, fieldError := range validationErrors {
+			fmt.Println("error", fieldError.Field(), "on tag", fieldError.Tag(),
+				"with error", fieldError.Error())
+		}
+	}
+}
