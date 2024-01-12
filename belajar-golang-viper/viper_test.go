@@ -7,7 +7,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var config *viper.Viper = viper.New()
+
 func TestViper(t *testing.T) {
-	var config *viper.Viper = viper.New()
 	assert.NotNil(t, config)
+}
+
+func TestJSON(t *testing.T) {
+	config := viper.New()
+	config.SetConfigName("config") // nama file config
+	config.SetConfigType("json")   // extention filenya
+	config.AddConfigPath(".")
+
+	// membaca config
+	err := config.ReadInConfig()
+	assert.Nil(t, err)
+
+	assert.Equal(t, "belajar-golang-viper", config.GetString("app.name"))
+	assert.Equal(t, "Zulhaditya", config.GetString("app.author"))
+	assert.Equal(t, "localhost", config.GetString("database.host"))
+	assert.Equal(t, 3306, config.GetInt("database.port"))
+	assert.Equal(t, true, config.GetBool("database.show_sql"))
 }
