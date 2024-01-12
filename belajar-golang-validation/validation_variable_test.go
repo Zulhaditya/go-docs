@@ -323,3 +323,28 @@ func TestBasicMap(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 }
+
+func TestAliasTag(t *testing.T) {
+	validate := validator.New()
+	validate.RegisterAlias("varchar", "required,max=255") // registrasi alias baru
+
+	// gunakan alias baru didalam struct
+	type Seller struct {
+		Id     string `validate:"varchar,min=5"`
+		Name   string `validate:"varchar"`
+		Owner  string `validate:"varchar"`
+		Slogan string `validate:"varchar"`
+	}
+
+	request := Seller{
+		Id:     "12345",
+		Name:   "Coffeshop",
+		Owner:  "Inayah Fitri Wulandari",
+		Slogan: "Jaya jaya jaya hehehehehe",
+	}
+
+	err := validate.Struct(request)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
