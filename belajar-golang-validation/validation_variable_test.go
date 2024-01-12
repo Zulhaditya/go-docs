@@ -208,3 +208,118 @@ func TestBasicCollection(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 }
+
+func TestMap(t *testing.T) {
+	type Address struct {
+		City    string `validate:"required"`
+		Country string `validate:"required"`
+	}
+
+	type School struct {
+		Name string `validate:"required"`
+	}
+
+	type User struct {
+		Id        string            `validate:"required"`
+		Name      string            `validate:"required"`
+		Addresses []Address         `validate:"required,dive"` // tambahkan tag dive untuk validasi slice juga
+		Hobbies   []string          `validate:"dive,required,min=1"`
+		Schools   map[string]School `validate:"dive,keys,required,min=2,endkeys"`
+	}
+
+	validate := validator.New()
+	request := User{
+		Id:   "",
+		Name: "",
+		Addresses: []Address{
+			{
+				City:    "",
+				Country: "",
+			},
+			{
+				City:    "",
+				Country: "",
+			},
+		},
+		Hobbies: []string{
+			"Sleep", "Coding", "Gaming", "X", "",
+		},
+		Schools: map[string]School{
+			"SD": {
+				Name: "SD 3 LINGGA",
+			},
+			"SMP": {
+				Name: "SMPN 1 LINGGA",
+			},
+			"SMA": {
+				Name: "SMAN 1 LINGGA",
+			},
+		},
+	}
+
+	err := validate.Struct(request)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func TestBasicMap(t *testing.T) {
+	type Address struct {
+		City    string `validate:"required"`
+		Country string `validate:"required"`
+	}
+
+	type School struct {
+		Name string `validate:"required"`
+	}
+
+	type User struct {
+		Id        string            `validate:"required"`
+		Name      string            `validate:"required"`
+		Addresses []Address         `validate:"required,dive"` // tambahkan tag dive untuk validasi slice juga
+		Hobbies   []string          `validate:"dive,required,min=1"`
+		Schools   map[string]School `validate:"dive,keys,required,min=2,endkeys"`
+		Wallet    map[string]int    `validate:"dive,keys,required,endkeys,required,gt=1000"`
+	}
+
+	validate := validator.New()
+	request := User{
+		Id:   "",
+		Name: "",
+		Addresses: []Address{
+			{
+				City:    "",
+				Country: "",
+			},
+			{
+				City:    "",
+				Country: "",
+			},
+		},
+		Hobbies: []string{
+			"Sleep", "Coding", "Gaming", "X", "",
+		},
+		Schools: map[string]School{
+			"SD": {
+				Name: "SD 3 LINGGA",
+			},
+			"SMP": {
+				Name: "SMPN 1 LINGGA",
+			},
+			"SMA": {
+				Name: "SMAN 1 LINGGA",
+			},
+		},
+		Wallet: map[string]int{
+			"BRI":     1000000,
+			"BCA":     2000000,
+			"MANDIRI": 0,
+			"":        1000,
+		},
+	}
+
+	err := validate.Struct(request)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
