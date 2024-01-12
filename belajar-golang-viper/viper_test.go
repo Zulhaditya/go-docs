@@ -60,3 +60,22 @@ func TestENV(t *testing.T) {
 	assert.Equal(t, 3306, config.GetInt("DATABASE_PORT"))
 	assert.Equal(t, true, config.GetBool("DATABASE_SHOW_SQL"))
 }
+
+func TestENVLocal(t *testing.T) {
+	config := viper.New()
+	config.SetConfigFile("config.env")
+	config.AddConfigPath(".")
+	config.AutomaticEnv() // membaca env local
+
+	// membaca config
+	err := config.ReadInConfig()
+	assert.Nil(t, err)
+
+	assert.Equal(t, "belajar-golang-viper", config.GetString("APP_NAME"))
+	assert.Equal(t, "Zulhaditya", config.GetString("APP_AUTHOR"))
+	assert.Equal(t, 3306, config.GetInt("DATABASE_PORT"))
+	assert.Equal(t, true, config.GetBool("DATABASE_SHOW_SQL"))
+
+	// export FROM_ENV=Hello, perintah di terminal untuk menambahkan env local
+	assert.Equal(t, "Hello", config.GetString("FROM_ENV"))
+}
