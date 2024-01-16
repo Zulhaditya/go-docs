@@ -246,6 +246,7 @@ func TestBodyParserXML(t *testing.T) {
 	assert.Equal(t, "Register success Ackxle", string(bytes))
 }
 
+// implementasi HTTP response
 func TestResponseJSON(t *testing.T) {
 	app.Get("/user", func(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{
@@ -260,4 +261,20 @@ func TestResponseJSON(t *testing.T) {
 	bytes, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, `{"name":"zulhaditya","username":"ackxle"}`, string(bytes))
+}
+
+// implementasi response download
+func TestDownloadFile(t *testing.T) {
+	app.Get("/download", func(ctx *fiber.Ctx) error {
+		return ctx.Download("./source/contoh.txt", "contoh.txt")
+	})
+
+	request := httptest.NewRequest("GET", "/download", nil)
+	response, err := app.Test(request)
+	assert.Nil(t, err)
+	assert.Equal(t, 200, response.StatusCode)
+	assert.Equal(t, "attachment; filename=\"contoh.txt\"", response.Header.Get("Content-Disposition"))
+	bytes, err := io.ReadAll(response.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, "this is sample file for upload!", string(bytes))
 }
