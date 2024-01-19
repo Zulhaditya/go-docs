@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -368,4 +369,18 @@ func TestView(t *testing.T) {
 	assert.Contains(t, string(bytes), "Hello Header")
 	assert.Contains(t, string(bytes), "Hello Content")
 
+}
+
+// implementasi HTTP client
+func TestClient(t *testing.T) {
+	client := fiber.AcquireClient()
+
+	agent := client.Get("https://example.com")
+	status, response, errors := agent.String()
+	assert.Nil(t, errors)
+	assert.Equal(t, 200, status)
+	assert.Contains(t, response, "Example Domain")
+
+	fiber.ReleaseClient(client)
+	fmt.Println(response)
 }
