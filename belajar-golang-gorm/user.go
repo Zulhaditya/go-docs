@@ -1,6 +1,8 @@
 package belajar_golang_gorm
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID          string    `gorm:"primary_key;column:id;<-:create"` // simbol <-:create hanya untuk create only

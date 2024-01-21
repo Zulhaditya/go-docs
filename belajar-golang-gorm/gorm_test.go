@@ -1,6 +1,7 @@
 package belajar_golang_gorm
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -94,5 +95,42 @@ func TestScanRows(t *testing.T) {
 	}
 
 	assert.Equal(t, 3, len(samples))
+
+}
+
+// test create user
+func TestCreateUser(t *testing.T) {
+	user := User{
+		ID:       "1",
+		Password: "secret",
+		Name: Name{
+			FirstName:  "Inayah",
+			MiddleName: "Fitri",
+			LastName:   "Wulandari",
+		},
+		Information: "Pesan ini akan di ignore",
+	}
+
+	response := db.Create(&user)
+	assert.Nil(t, response.Error)
+	assert.Equal(t, 1, int(response.RowsAffected))
+}
+
+// test batch insert => insert data multiple sekaligus dalam satu query
+func TestBatchInsert(t *testing.T) {
+	var users []User
+	for i := 2; i < 10; i++ {
+		users = append(users, User{
+			ID: strconv.Itoa(i),
+			Name: Name{
+				FirstName: "User " + strconv.Itoa(i),
+			},
+			Password: "secret",
+		})
+	}
+
+	result := db.Create(&users)
+	assert.Nil(t, result.Error)
+	assert.Equal(t, 8, int(result.RowsAffected))
 
 }
