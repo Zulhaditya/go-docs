@@ -20,3 +20,12 @@ CREATE TABLE users
 )ENGINE = InnoDB;
 
 SELECT * FROM users;
+
+ALTER TABLE users
+    RENAME COLUMN name to first_name;
+
+ALTER TABLE users
+    ADD COLUMN middle_name varchar(100) null after first_name;
+
+ALTER TABLE users
+    ADD COLUMN last_name varchar(100) null after middle_name;
