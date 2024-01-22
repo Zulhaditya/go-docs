@@ -231,3 +231,10 @@ func TestQueryInlineCondition(t *testing.T) {
 	assert.Equal(t, "5", user.ID)
 	assert.Equal(t, "User 5", user.Name.FirstName)
 }
+
+func TestQueryAllObject(t *testing.T) {
+	var users []User
+	err := db.Find(&users, "id in ?", []string{"1", "2", "3", "4"}).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(users))
+}
