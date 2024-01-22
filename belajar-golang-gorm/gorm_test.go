@@ -374,3 +374,19 @@ func TestSelectedUpdate(t *testing.T) {
 
 	assert.Nil(t, result.Error)
 }
+
+// test auto increment
+func TestAutoIncrement(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		userLog := UserLog{
+			UserId: "1",
+			Action: "Test Action",
+		}
+
+		result := db.Create(&userLog)
+		assert.Nil(t, result.Error)
+
+		assert.NotEqual(t, 0, userLog.ID)
+		fmt.Println(userLog.ID)
+	}
+}
