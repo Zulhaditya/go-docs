@@ -46,3 +46,15 @@ CREATE TABLE user_logs (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
+
+DELETE FROM user_logs;
+
+ALTER TABLE user_logs
+    MODIFY created_at BIGINT NOT NULL;
+
+ALTER TABLE user_logs
+    MODIFY updated_at BIGINT NOT NULL;
+
+SELECT * FROM user_logs;
+
+DESC user_logs;

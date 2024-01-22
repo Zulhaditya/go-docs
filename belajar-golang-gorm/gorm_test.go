@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -389,4 +390,69 @@ func TestAutoIncrement(t *testing.T) {
 		assert.NotEqual(t, 0, userLog.ID)
 		fmt.Println(userLog.ID)
 	}
+}
+
+// method save bisa untuk create dan juga update
+func TestSaveOrUpdate(t *testing.T) {
+	userLog := UserLog{
+		UserId: "1",
+		Action: "Test Action",
+	}
+
+	// create
+	result := db.Save(&userLog)
+	assert.Nil(t, result.Error)
+
+	// update
+	userLog.UserId = "2"
+	result = db.Save(&userLog)
+	assert.Nil(t, result.Error)
+}
+
+// save non auto increment data
+func TestSaveOrUpdateNonAutoIncrement(t *testing.T) {
+	user := User{
+		ID: "99",
+		Name: Name{
+			FirstName: "User 99",
+		},
+	}
+
+	// create
+	result := db.Save(&user)
+	assert.Nil(t, result.Error)
+
+	// update
+	user.Name.FirstName = "User 99 Updated"
+	result = db.Save(&user)
+	assert.Nil(t, result.Error)
+}
+
+func TestConflict(t *testing.T) {
+	user := User{
+		ID: "69",
+		Name: Name{
+			FirstName: "User 69",
+		},
+	}
+
+	result := db.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&user)
+	assert.Nil(t, result.Error)
+}
+
+// method delete
+func TestDelete(t *testing.T) {
+	var user User
+	result := db.First(&user, "id = ?", "99")
+	assert.Nil(t, result.Error)
+	result = db.Delete(&user)
+	assert.Nil(t, result.Error)
+
+	result = db.Delete(&User{}, "id = ?", "69")
+	assert.Nil(t, result.Error)
+
+	result = db.Where("id = ?", "11").Delete(&User{})
+	assert.Nil(t, result.Error)
 }
