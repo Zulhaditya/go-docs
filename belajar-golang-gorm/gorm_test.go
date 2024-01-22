@@ -210,3 +210,24 @@ func TestManualTransactionError(t *testing.T) {
 		tx.Commit()
 	}
 }
+
+// implementasi single query object
+func TestQuerySingleObject(t *testing.T) {
+	user := User{}
+	result := db.First(&user)
+	assert.Nil(t, result.Error)
+	assert.Equal(t, "1", user.ID)
+
+	user = User{}
+	result = db.Last(&user)
+	assert.Nil(t, result.Error)
+	assert.Equal(t, "9", user.ID)
+}
+
+func TestQueryInlineCondition(t *testing.T) {
+	user := User{}
+	result := db.Take(&user, "id = ?", "5")
+	assert.Nil(t, result.Error)
+	assert.Equal(t, "5", user.ID)
+	assert.Equal(t, "User 5", user.Name.FirstName)
+}
