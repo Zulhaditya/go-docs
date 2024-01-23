@@ -591,29 +591,29 @@ func TestSkipAutoCreateUpdate(t *testing.T) {
 // relasi one to many
 func TestUserAndAddresses(t *testing.T) {
 	user := User{
-		ID:       "50",
+		ID:       "2",
 		Password: "secret",
 		Name: Name{
 			FirstName: "User 50",
 		},
 		Wallet: Wallet{
-			ID:      "50",
-			UserId:  "50",
+			ID:      "2",
+			UserId:  "2",
 			Balance: 5000000,
 		},
 		Addresses: []Address{
 			{
-				UserId:  "50",
+				UserId:  "2",
 				Address: "Jalan kenangan",
 			},
 			{
-				UserId:  "50",
+				UserId:  "2",
 				Address: "Jalan seroja",
 			},
 		},
 	}
 
-	err := db.Create(&user).Error
+	err := db.Save(&user).Error
 	assert.Nil(t, err)
 }
 
@@ -628,5 +628,33 @@ func TestTakePreloadJoinOneToMany(t *testing.T) {
 	var user User
 	err := db.Model(&User{}).Preload("Addresses").Joins("Wallet").
 		Take(&user, "users.id = ?", "50").Error
+	assert.Nil(t, err)
+}
+
+// preload dan join pada relasi many to one
+func TestBelongsTo(t *testing.T) {
+	fmt.Println("Preload")
+	var addresses []Address
+	err := db.Preload("User").Find(&addresses).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(addresses))
+
+	fmt.Println("Joins")
+	addresses = []Address{}
+	err = db.Joins("User").Find(&addresses).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(addresses))
+}
+
+// many to one di relasi one to one
+func TestBelongsToOneToOne(t *testing.T) {
+	fmt.Println("Preload")
+	var wallets []Wallet
+	err := db.Preload("User").Find(&wallets).Error
+	assert.Nil(t, err)
+
+	fmt.Println("Joins")
+	wallets = []Wallet{}
+	err = db.Joins("User").Find(&wallets).Error
 	assert.Nil(t, err)
 }
