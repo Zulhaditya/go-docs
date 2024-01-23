@@ -71,3 +71,17 @@ CREATE TABLE todos (
 ) ENGINE = InnoDB;
 
 SELECT * FROM todos;
+
+CREATE TABLE wallets (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id VARCHAR(100) NOT NULL,
+    balance BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    Foreign Key (user_id) REFERENCES users (id)
+) ENGINE = InnoDB;
+
+DESC wallets;
+
+SELECT * FROM wallets;

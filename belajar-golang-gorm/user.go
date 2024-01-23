@@ -10,7 +10,8 @@ type User struct {
 	Name        Name      `gorm:"embedded"`
 	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime;<-:create"`
 	UpdatedAt   time.Time `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
-	Information string    `gorm:"-"` // simbol (-) tidak perlu read atau write di database
+	Information string    `gorm:"-"`                                // simbol (-) tidak perlu read atau write di database
+	Wallet      Wallet    `gorm:"foreignKey:user_id;references:id"` // relasi one to one
 }
 
 // mengubah nama table mapping menjadi users

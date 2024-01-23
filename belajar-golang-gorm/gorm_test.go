@@ -492,3 +492,60 @@ func TestUnscoped(t *testing.T) {
 	assert.Nil(t, result.Error)
 	assert.Equal(t, 0, len(todos))
 }
+
+// implementasi locking data pada transaction
+func TestLock(t *testing.T) {
+	err := db.Transaction(func(tx *gorm.DB) error {
+		var user User
+		err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Take(&user, "id = ?", "1").Error
+		if err != nil {
+			return err
+		}
+
+		user.Name.FirstName = "Inayah"
+		user.Name.MiddleName = "Fitri"
+		user.Name.LastName = "Wulandari"
+		return tx.Save(&user).Error
+	})
+
+	assert.Nil(t, err)
+}
+
+// relasi one to one
+
+// test create wallet
+func TestCreateWallet(t *testing.T) {
+	wallet := Wallet{
+		ID:      "1",
+		UserId:  "1",
+		Balance: 1000000,
+	}
+
+	err := db.Create(&wallet).Error
+	assert.Nil(t, err)
+}
+
+// test retrieve relation untuk mengambil data wallet yang berelasi dengan table user
+// dua kali query
+func TestRetrieveRelationPreload(t *testing.T) {
+	var user User
+	err := db.Model(&User{}).Preload("Wallet").Take(&user).Error
+	assert.Nil(t, err)
+
+	assert.Equal(t, "1", user.ID)
+	assert.Equal(t, "1", user.Wallet.ID)
+	fmt.Println(user.Wallet.ID)
+	fmt.Println(user.Wallet.Balance)
+}
+
+// menggunakan joins
+// satu kali query atau digabungkan (select kedua table sekaligus)
+func TestRetrieveRelationJoin(t *testing.T) {
+	var user User
+	err := db.Model(&User{}).Joins("Wallet").Take(&user, "users.id = ?", "1").Error
+	assert.Nil(t, err)
+
+	assert.Equal(t, "1", user.ID)
+	assert.Equal(t, "1", user.Wallet.ID)
+	assert.Equal(t, int64(1000000), user.Wallet.Balance)
+}
