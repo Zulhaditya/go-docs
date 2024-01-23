@@ -456,3 +456,39 @@ func TestDelete(t *testing.T) {
 	result = db.Where("id = ?", "11").Delete(&User{})
 	assert.Nil(t, result.Error)
 }
+
+// method soft delete
+func TestSoftDelete(t *testing.T) {
+	todo := Todo{
+		UserId:      "1",
+		Title:       "Todo 1",
+		Description: "Description 1",
+	}
+
+	err := db.Create(&todo).Error
+	assert.Nil(t, err)
+
+	err = db.Delete(&todo).Error
+	assert.Nil(t, err)
+	assert.NotNil(t, todo.DeletedAt)
+
+	var todos []Todo
+	err = db.Find(&todos).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(todos))
+}
+
+// method unscoped akan melakukan hard delete ke database, baik yang soft delete sekalipun
+func TestUnscoped(t *testing.T) {
+	var todo Todo
+	result := db.Unscoped().First(&todo, "id = ?", "1")
+	assert.Nil(t, result.Error)
+
+	result = db.Unscoped().Delete(&todo)
+	assert.Nil(t, result.Error)
+
+	var todos []Todo
+	result = db.Unscoped().Find(&todos)
+	assert.Nil(t, result.Error)
+	assert.Equal(t, 0, len(todos))
+}
