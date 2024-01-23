@@ -84,4 +84,4 @@ CREATE TABLE wallets (
 
 DESC wallets;
 
-SELECT * FROM wallets;
+SELECT * FROM users;

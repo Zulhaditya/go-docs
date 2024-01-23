@@ -549,3 +549,41 @@ func TestRetrieveRelationJoin(t *testing.T) {
 	assert.Equal(t, "1", user.Wallet.ID)
 	assert.Equal(t, int64(1000000), user.Wallet.Balance)
 }
+
+// auto create/update pada relasi one to one
+func TestAutoCreateUpdate(t *testing.T) {
+	user := User{
+		ID:       "20",
+		Password: "secret",
+		Name: Name{
+			FirstName: "User 20 bro!",
+		},
+		Wallet: Wallet{
+			ID:      "20",
+			UserId:  "20",
+			Balance: 2000000,
+		},
+	}
+
+	err := db.Create(&user).Error
+	assert.Nil(t, err)
+}
+
+// skip auto create/update menggunakan method omit
+func TestSkipAutoCreateUpdate(t *testing.T) {
+	user := User{
+		ID:       "21",
+		Password: "secret",
+		Name: Name{
+			FirstName: "User 21 bro!",
+		},
+		Wallet: Wallet{
+			ID:      "21",
+			UserId:  "21",
+			Balance: 3000000,
+		},
+	}
+
+	err := db.Omit(clause.Associations).Create(&user).Error
+	assert.Nil(t, err)
+}
