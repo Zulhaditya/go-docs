@@ -587,3 +587,46 @@ func TestSkipAutoCreateUpdate(t *testing.T) {
 	err := db.Omit(clause.Associations).Create(&user).Error
 	assert.Nil(t, err)
 }
+
+// relasi one to many
+func TestUserAndAddresses(t *testing.T) {
+	user := User{
+		ID:       "50",
+		Password: "secret",
+		Name: Name{
+			FirstName: "User 50",
+		},
+		Wallet: Wallet{
+			ID:      "50",
+			UserId:  "50",
+			Balance: 5000000,
+		},
+		Addresses: []Address{
+			{
+				UserId:  "50",
+				Address: "Jalan kenangan",
+			},
+			{
+				UserId:  "50",
+				Address: "Jalan seroja",
+			},
+		},
+	}
+
+	err := db.Create(&user).Error
+	assert.Nil(t, err)
+}
+
+// preload dan join pada relasi one to many
+func TestPreloadJoinOneToMany(t *testing.T) {
+	var usersPreload []User
+	err := db.Model(&User{}).Preload("Addresses").Joins("Wallet").Find(&usersPreload).Error
+	assert.Nil(t, err)
+}
+
+func TestTakePreloadJoinOneToMany(t *testing.T) {
+	var user User
+	err := db.Model(&User{}).Preload("Addresses").Joins("Wallet").
+		Take(&user, "users.id = ?", "50").Error
+	assert.Nil(t, err)
+}
