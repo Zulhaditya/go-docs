@@ -13,6 +13,8 @@ type User struct {
 	Information string    `gorm:"-"`                                // simbol (-) tidak perlu read atau write di database
 	Wallet      Wallet    `gorm:"foreignKey:user_id;references:id"` // relasi one to one
 	Addresses   []Address `gorm:"foreignKey:user_id;references:id"` // relasi one to many
+	// relasi many to many
+	LikeProducts []Product `gorm:"many2many:user_like_product;foreignKey:id;joinForeignKey:user_id;references:id;joinReferences:product_id"`
 }
 
 // mengubah nama table mapping menjadi users

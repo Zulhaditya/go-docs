@@ -658,3 +658,40 @@ func TestBelongsToOneToOne(t *testing.T) {
 	err = db.Joins("User").Find(&wallets).Error
 	assert.Nil(t, err)
 }
+
+// create many to many
+func TestCreateManyToMany(t *testing.T) {
+	// buat product terlebih dahulu
+	product := Product{
+		ID:    "P001",
+		Name:  "Contoh Product",
+		Price: 1000000,
+	}
+
+	err := db.Create(&product).Error
+	assert.Nil(t, err)
+
+	// user 1 menyukai product P001
+
+	err = db.Table("user_like_product").Create(map[string]interface{}{
+		"user_id":    "1",
+		"product_id": "P001",
+	}).Error
+	assert.Nil(t, err)
+
+	// user 2 menyukai product P001
+
+	err = db.Table("user_like_product").Create(map[string]interface{}{
+		"user_id":    "2",
+		"product_id": "P001",
+	}).Error
+	assert.Nil(t, err)
+}
+
+// preload many to many
+func TestPreloadManyToMany(t *testing.T) {
+	var product Product
+	err := db.Preload("LikedByUsers").First(&product, "id = ?", "P001").Error
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(product.LikedByUsers))
+}
