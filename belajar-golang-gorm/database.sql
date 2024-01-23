@@ -84,7 +84,7 @@ CREATE TABLE wallets (
 
 DESC wallets;
 
-SELECT * FROM users;
+SELECT * FROM wallets;
 
 CREATE TABLE addresses (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -125,3 +125,5 @@ CREATE TABLE user_like_product
 DESC user_like_product;
 
 SELECT * FROM user_like_product;
+
+SELECT * FROM `wallets` WHERE id = '2' LIMIT 1;
