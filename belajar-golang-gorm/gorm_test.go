@@ -908,3 +908,72 @@ func TestMigrator(t *testing.T) {
 	err := db.Migrator().AutoMigrate(&GuestBook{})
 	assert.Nil(t, err)
 }
+
+// implementasi hook
+
+/*
+1. hook untuk create
+- begin transaction
+BeforeSave()
+BeforeCreate()
+- save before associations
+- insert into database
+- save after associations
+AfterCreate()
+AfterSave()
+- commit or rollback transaction
+*/
+
+/*
+2. hook untuk update
+- begin transaction
+BeforeSave()
+BeforeUpdate()
+- save before associations
+- insert into database
+- save after associations
+AfterUpdate()
+AfterSave()
+- commit or rollback transaction
+*/
+
+/*
+3. hook untuk delete
+- begin transaction
+BeforeDelete()
+- delete from database
+AfterDelete()
+- commit or rollback transaction
+*/
+
+/*
+4. hook untuk find
+- load data from database
+- preloading (eager loading)
+AfterFind()
+*/
+
+// implementasi before create
+
+// function untuk menambahkan id jika id user kosong
+func (u *User) BeforeCreate(db *gorm.DB) error {
+	if u.ID == "" {
+		u.ID = "user-" + time.Now().Format("20060102150405")
+	}
+
+	return nil
+}
+
+func TestUserHook(t *testing.T) {
+	user := User{
+		Password: "secret",
+		Name: Name{
+			FirstName: "User 100",
+		},
+	}
+
+	err := db.Create(&user).Error
+	assert.Nil(t, err)
+	assert.NotNil(t, user.ID)
+	assert.NotEqual(t, "", user.ID)
+}
