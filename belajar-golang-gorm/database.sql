@@ -127,3 +127,5 @@ DESC user_like_product;
 SELECT * FROM user_like_product;
 
 SELECT * FROM `wallets` WHERE id = '2' LIMIT 1;
+
+SELECT sum(balance) as total_balance,min(balance) as min_balance,max(balance) as max_balance,avg(balance) as avg_balance FROM `wallets` LIMIT 1
