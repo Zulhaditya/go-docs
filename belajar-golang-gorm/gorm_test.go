@@ -794,3 +794,30 @@ func TestPreloadAll(t *testing.T) {
 	err := db.Preload(clause.Associations).Take(&user, "id = ?", "1").Error
 	assert.Nil(t, err)
 }
+
+// implementasi join query
+func TestJoinQuery(t *testing.T) {
+	var users []User
+	// inner join => data harus wajib ada di kedua table
+	err := db.Joins("join wallets on wallets.user_id = users.id").Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(users))
+
+	users = []User{}
+	err = db.Joins("Wallet").Find(&users).Error // menggunakan left join => data hanya ada di satu table saja
+	assert.Nil(t, err)
+	assert.Equal(t, 16, len(users))
+}
+
+func TestJoinQueryCondition(t *testing.T) {
+	var users []User
+	// inner join => data harus wajib ada di kedua table
+	err := db.Joins("join wallets on wallets.user_id = users.id AND wallets.balance > ?", 500000).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(users))
+
+	users = []User{}
+	err = db.Joins("Wallet").Where("Wallet.balance > ?", 500000).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(users))
+}
