@@ -1,6 +1,7 @@
 package belajar_golang_gorm
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"testing"
@@ -860,4 +861,33 @@ func TestAggregationGroupByHaving(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, 3, len(result)) // 3 data dengan wallet diatas satu juta
+}
+
+// implementasi context
+func TestContext(t *testing.T) {
+	ctx := context.Background()
+
+	var users []User
+	err := db.WithContext(ctx).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 16, len(users))
+}
+
+// implementasi scopes
+func BrokenWalletBalance(db *gorm.DB) *gorm.DB {
+	return db.Where("balance = ?", 0)
+}
+
+func SultanWalletBalance(db *gorm.DB) *gorm.DB {
+	return db.Where("balance > ?", 1000000)
+}
+
+func TestScopes(t *testing.T) {
+	var wallets []Wallet
+	err := db.Scopes(BrokenWalletBalance).Find(&wallets).Error
+	assert.Nil(t, err)
+
+	wallets = []Wallet{}
+	err = db.Scopes(SultanWalletBalance).Find(&wallets).Error
+	assert.Nil(t, err)
 }
