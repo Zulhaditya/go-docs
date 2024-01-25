@@ -3,6 +3,7 @@ package belajar_golang_redis
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
@@ -138,4 +139,67 @@ func TestPipeLine(t *testing.T) {
 
 	assert.Equal(t, "Inayah", client.Get(ctx, "name").Val())
 	assert.Equal(t, "Jakarta", client.Get(ctx, "address").Val())
+}
+
+func TestTransaction(t *testing.T) {
+	_, err := client.TxPipelined(ctx, func(p redis.Pipeliner) error {
+		p.SetEx(ctx, "name", "Hapiz", time.Second*5)
+		p.SetEx(ctx, "address", "Batam", time.Second*5)
+		return nil
+	})
+
+	assert.Nil(t, err)
+
+	assert.Equal(t, "Hapiz", client.Get(ctx, "name").Val())
+	assert.Equal(t, "Batam", client.Get(ctx, "address").Val())
+}
+
+func TestPublishStream(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		client.XAdd(ctx, &redis.XAddArgs{
+			Stream: "members",
+			Values: map[string]interface{}{
+				"name":    "Inayah",
+				"address": "Indonesia",
+			},
+		})
+	}
+}
+
+func TestCreateConsumerGroup(t *testing.T) {
+	client.XGroupCreate(ctx, "members", "group-1", "0")
+	client.XGroupCreateConsumer(ctx, "members", "group-1", "consumer-1")
+	client.XGroupCreateConsumer(ctx, "members", "group-1", "consumer-2")
+}
+
+func TestGetStream(t *testing.T) {
+	result := client.XReadGroup(ctx, &redis.XReadGroupArgs{
+		Group:    "group-1",
+		Consumer: "consumer-1",
+		Streams:  []string{"members", ">"},
+		Count:    2,
+		Block:    time.Second * 5,
+	}).Val()
+
+	for _, stream := range result {
+		for _, message := range stream.Messages {
+			fmt.Println(message.Values)
+		}
+	}
+}
+
+func TestSubsribePubSub(t *testing.T) {
+	pubSub := client.Subscribe(ctx, "channel-1")
+	for i := 0; i < 10; i++ {
+		message, _ := pubSub.ReceiveMessage(ctx)
+		fmt.Println(message.Payload)
+	}
+
+	pubSub.Close()
+}
+
+func TestPublishPubSub(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		client.Publish(ctx, "channel-1", "Hello "+strconv.Itoa(i))
+	}
 }
