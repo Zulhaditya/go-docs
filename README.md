@@ -1,5 +1,3 @@
-# Belajar Golang dari basic sampai advance
-
 # Tujuan
 Memperdalam pemahaman bahasa pemrograman golang untuk berinteraksi dengan database dan melakukan pengoptimalan aplikasi menggunakan fitur terbaru.
 
